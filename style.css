@@ -129,3 +129,82 @@ footer p {
     border-radius: 12px;
   }
 }
+
+
+.form-field {
+  margin: 18px 0;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+input[type="number"] {
+  width: 100%;
+  max-width: 320px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #171719;
+  color: var(--text);
+  font: inherit;
+}
+
+button {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--mars);
+  color: #171719;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--mars-light);
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--mars-light);
+  outline-offset: 3px;
+}
+
+fieldset {
+  min-width: 0;
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+legend {
+  padding: 0 8px;
+  color: var(--mars-light);
+  font-weight: bold;
+}
+
+.module-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.module-option input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--mars);
+}
+
+.results {
+  margin-top: 18px;
+  overflow-wrap: anywhere;
+}
+
+.results h3 {
+  color: var(--mars-light);
+}
