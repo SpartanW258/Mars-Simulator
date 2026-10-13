@@ -137,3 +137,63 @@ if (moduleForm && moduleSummary) {
     moduleSummary.appendChild(list);
   });
 }
+
+
+
+const layoutModule = document.querySelector("#layout-module");
+const layoutGrid = document.querySelector("#base-grid");
+const clearLayoutButton = document.querySelector("#clear-layout");
+const layoutStatus = document.querySelector("#layout-status");
+
+if (layoutModule && layoutGrid && clearLayoutButton && layoutStatus) {
+  const placements = new Map();
+
+  function updateLayoutStatus(message) {
+    layoutStatus.textContent = message;
+  }
+
+  layoutGrid.addEventListener("click", (event) => {
+    const cell = event.target.closest(".grid-cell");
+
+    if (!cell) return;
+
+    const cellId = cell.dataset.cell;
+
+    if (placements.has(cellId)) {
+      updateLayoutStatus(
+        "Bu hücre dolu. Başka bir boş hücre seç veya yerleşimi temizle."
+      );
+      return;
+    }
+
+    const moduleName = layoutModule.value;
+    placements.set(cellId, moduleName);
+
+    cell.textContent = moduleName;
+    cell.classList.add("occupied");
+    cell.setAttribute(
+      "aria-label",
+      `Hücre ${Number(cellId) + 1}: ${moduleName}`
+    );
+
+    updateLayoutStatus(
+      `${moduleName} modülü yerleşime eklendi. ` +
+      `Dolu hücre sayısı: ${placements.size}/9.`
+    );
+  });
+
+  clearLayoutButton.addEventListener("click", () => {
+    placements.clear();
+
+    layoutGrid.querySelectorAll(".grid-cell").forEach((cell) => {
+      cell.textContent = "+";
+      cell.classList.remove("occupied");
+      cell.setAttribute(
+        "aria-label",
+        `Hücre ${Number(cell.dataset.cell) + 1}, boş`
+      );
+    });
+
+    updateLayoutStatus("Yerleşim temizlendi.");
+  });
+}
