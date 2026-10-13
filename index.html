@@ -130,3 +130,41 @@
   </footer>
 </body>
 </html>
+
+
+<section aria-labelledby="layout-title">
+  <h2 id="layout-title">Üs Yerleşim Planı</h2>
+  <p>
+    Aşağıdan bir modül seç ve ızgarada uygun bir hücreye yerleştir.
+    Bu görünüm kavramsal bir yerleşim taslağıdır.
+  </p>
+
+  <div class="form-field">
+    <label for="layout-module">Yerleştirilecek modül</label>
+    <select id="layout-module">
+      <option value="Yaşam alanı">Yaşam alanı</option>
+      <option value="Bilim laboratuvarı">Bilim laboratuvarı</option>
+      <option value="Seracılık alanı">Seracılık alanı</option>
+      <option value="Enerji merkezi">Enerji merkezi</option>
+      <option value="Su arıtma bölümü">Su arıtma bölümü</option>
+      <option value="Depolama alanı">Depolama alanı</option>
+    </select>
+  </div>
+
+  <div id="base-grid" class="base-grid" aria-label="Üs yerleşim ızgarası">
+    <button type="button" class="grid-cell" data-cell="0" aria-label="Hücre 1, boş">+</button>
+    <button type="button" class="grid-cell" data-cell="1" aria-label="Hücre 2, boş">+</button>
+    <button type="button" class="grid-cell" data-cell="2" aria-label="Hücre 3, boş">+</button>
+    <button type="button" class="grid-cell" data-cell="3" aria-label="Hücre 4, boş">+</button>
+    <button type="button" class="grid-cell" data-cell="4" aria-label="Hücre 5, boş">+</button>
+    <button type="button" class="grid-cell" data-cell="5" aria-label="Hücre 6, boş">+</button>
+    <button type="button" class="grid-cell" data-cell="6" aria-label="Hücre 7, boş">+</button>
+    <button type="button" class="grid-cell" data-cell="7" aria-label="Hücre 8, boş">+</button>
+    <button type="button" class="grid-cell" data-cell="8" aria-label="Hücre 9, boş">+</button>
+  </div>
+
+  <button type="button" id="clear-layout">Yerleşimi Temizle</button>
+  <p id="layout-status" class="results" aria-live="polite">
+    Henüz hiçbir modül yerleştirilmedi.
+  </p>
+</section>
