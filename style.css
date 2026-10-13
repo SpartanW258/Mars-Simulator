@@ -1,0 +1,131 @@
+
+/* Mars Üssü Planlayıcısı - Görsel tasarım */
+
+:root {
+  --background: #171719;
+  --surface: #242326;
+  --surface-light: #302b2b;
+  --mars: #e66b4d;
+  --mars-light: #ff9a76;
+  --text: #f5f1ed;
+  --muted: #c3b8b2;
+  --border: #51413d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse at top, #42251f 0%, transparent 48%),
+    var(--background);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.7;
+}
+
+header {
+  padding: 64px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #51271f, #211d20 75%);
+  border-bottom: 2px solid var(--mars);
+}
+
+header > p:first-child {
+  color: var(--mars-light);
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+}
+
+h1 {
+  margin: 12px 0;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.2;
+}
+
+header p:last-child {
+  max-width: 600px;
+  margin: 16px auto 0;
+  color: var(--muted);
+}
+
+main {
+  width: min(100% - 32px, 900px);
+  margin: 36px auto;
+}
+
+section {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+}
+
+h2 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--mars-light);
+  font-size: 1.5rem;
+}
+
+ul {
+  padding-left: 24px;
+}
+
+li {
+  padding: 4px 0;
+}
+
+li::marker {
+  color: var(--mars);
+}
+
+strong,
+#status {
+  color: var(--mars-light);
+}
+
+footer {
+  padding: 28px 20px;
+  background: #111113;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+footer p {
+  max-width: 760px;
+  margin: 8px auto;
+}
+
+:focus-visible {
+  outline: 3px solid var(--mars-light);
+  outline-offset: 4px;
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 44px 18px;
+  }
+
+  main {
+    width: calc(100% - 24px);
+    margin: 20px auto;
+  }
+
+  section {
+    padding: 18px;
+    border-radius: 12px;
+  }
+}
