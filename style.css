@@ -208,3 +208,54 @@ legend {
 .results h3 {
   color: var(--mars-light);
 }
+
+
+
+select {
+  width: 100%;
+  max-width: 360px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-light);
+  color: var(--text);
+  font: inherit;
+}
+
+.base-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.grid-cell {
+  display: flex;
+  min-height: 100px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: #302b2b;
+  border: 1px dashed var(--mars);
+  border-radius: 12px;
+  color: var(--text);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.grid-cell.occupied {
+  background: #593126;
+  border-style: solid;
+}
+
+@media (max-width: 420px) {
+  .base-grid {
+    gap: 6px;
+  }
+
+  .grid-cell {
+    min-height: 82px;
+    padding: 6px;
+    font-size: 0.85rem;
+  }
+}
