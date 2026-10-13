@@ -7,61 +7,126 @@
   <meta name="description" content="Dört kişilik Mars kolonisi için üs ve kaynak planlama uygulaması.">
   <title>Mars Üssü Planlayıcısı</title>
   <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
 
 <body>
   <header>
     <p>MARS KEŞİF PROGRAMI</p>
     <h1>Mars Üssü Planlayıcısı</h1>
-    <p>Dört kişilik bir ekibin yaşam alanını ve kaynaklarını planla.</p>
+    <p>Dört kişilik ekibin yaşam alanını ve kaynaklarını planla.</p>
   </header>
 
   <main>
     <section aria-labelledby="mission-title">
       <h2 id="mission-title">Görev Özeti</h2>
       <p>Görev: Mars yüzeyinde sürdürülebilir bir üs tasarlamak.</p>
-      <p>Ekip büyüklüğü: <strong>4 kişi</strong></p>
-      <p>Durum: <span id="status">Ön planlama</span></p>
+      <p>Ekip büyüklüğü: Bu değeri aşağıdaki alandan değiştirebilirsin.</p>
+      <p>Durum: <strong id="status">Ön planlama</strong></p>
+    </section>
+
+    <section aria-labelledby="crew-title">
+      <h2 id="crew-title">Mürettebat ve Görev Süresi</h2>
+
+      <div class="form-field">
+        <label for="crew-size">Mürettebat sayısı (1–12)</label>
+        <input
+          id="crew-size"
+          name="crew-size"
+          type="number"
+          min="1"
+          max="12"
+          step="1"
+          value="4"
+          required
+        >
+      </div>
+
+      <div class="form-field">
+        <label for="mission-days">Görev süresi (gün, 1–3650)</label>
+        <input
+          id="mission-days"
+          name="mission-days"
+          type="number"
+          min="1"
+          max="3650"
+          step="1"
+          value="30"
+          required
+        >
+      </div>
+
+      <button id="calculate-button" type="button">
+        Kaynakları Hesapla
+      </button>
+
+      <div id="results" class="results" aria-live="polite">
+        <p>Kaynak tahminini görmek için hesaplama düğmesine bas.</p>
+      </div>
     </section>
 
     <section aria-labelledby="modules-title">
       <h2 id="modules-title">Üs Modülleri</h2>
-      <p>Üssünde bulunmasını istediğin temel bölümleri incele.</p>
+      <p>Üssünde bulunmasını istediğin bölümleri seç.</p>
 
-      <ul>
-        <li>Yaşam alanı</li>
-        <li>Bilim laboratuvarı</li>
-        <li>Seracılık alanı</li>
-        <li>Enerji merkezi</li>
-        <li>Su arıtma bölümü</li>
-        <li>Depolama alanı</li>
-      </ul>
+      <form id="module-form">
+        <fieldset>
+          <legend>Planlanan modüller</legend>
+
+          <label class="module-option">
+            <input type="checkbox" name="module" value="Yaşam alanı">
+            Yaşam alanı
+          </label>
+
+          <label class="module-option">
+            <input type="checkbox" name="module" value="Bilim laboratuvarı">
+            Bilim laboratuvarı
+          </label>
+
+          <label class="module-option">
+            <input type="checkbox" name="module" value="Seracılık alanı">
+            Seracılık alanı
+          </label>
+
+          <label class="module-option">
+            <input type="checkbox" name="module" value="Enerji merkezi">
+            Enerji merkezi
+          </label>
+
+          <label class="module-option">
+            <input type="checkbox" name="module" value="Su arıtma bölümü">
+            Su arıtma bölümü
+          </label>
+
+          <label class="module-option">
+            <input type="checkbox" name="module" value="Depolama alanı">
+            Depolama alanı
+          </label>
+        </fieldset>
+
+        <button type="submit">Modülleri Planla</button>
+      </form>
+
+      <div id="module-summary" class="results" aria-live="polite">
+        <p>Seçtiğin modüller burada listelenecek.</p>
+      </div>
     </section>
 
     <section aria-labelledby="resources-title">
       <h2 id="resources-title">Kaynak Planlaması</h2>
-      <p>Üssün kaynaklarını bu bölümden planlayacağız.</p>
-
-      <ul>
-        <li>Su</li>
-        <li>Enerji</li>
-        <li>Yiyecek</li>
-      </ul>
-
-      <p>Kaynak hesaplama özellikleri sonraki aşamalarda eklenecek.</p>
-    </section>
-
-    <section aria-labelledby="crew-title">
-      <h2 id="crew-title">Mürettebat</h2>
-      <p>Planlama, dört kişilik bir ekip esas alınarak yapılacaktır.</p>
+      <p>Bu sürüm su, yiyecek ve enerji için basitleştirilmiş tahminler yapar.</p>
+      <p>
+        Kullanılan kişi başı günlük katsayılar konsept amaçlıdır;
+        gerçek bir Mars görevinin gereksinimleri olarak değerlendirilmemelidir.
+      </p>
     </section>
   </main>
 
   <footer>
     <p>Mars Üssü Planlayıcısı — Eğitim ve konsept tasarım projesi.</p>
-    <p>Gösterilen bilgiler gerçek bir Mars görevi için doğrulanmış mühendislik değerleri değildir.</p>
+    <p>
+      Sonuçlar gerçek görev verileri veya doğrulanmış mühendislik hesapları değildir.
+    </p>
   </footer>
-
-  <script src="script.js"></script>
 </body>
 </html>
