@@ -1,182 +1,736 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Mars kolonisi için üs ve kaynak planlama uygulaması.">
-  <title>Mars Üssü Planlayıcısı</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mars Base Planner | Mars Üssü Planlayıcı</title>
+
+    <style>
+        :root {
+            --bg: #17131b;
+            --panel: #251d29;
+            --panel-light: #332633;
+            --accent: #f0a05c;
+            --accent-light: #ffd59b;
+            --text: #fff5ec;
+            --muted: #c9b9b2;
+            --border: #59414a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(ellipse at top, #492b31 0%, transparent 55%),
+                var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 18px 22px;
+        }
+
+        .mars-logo {
+            width: 180px;
+            max-width: 42vw;
+            margin: 0 auto 12px;
+            filter: drop-shadow(0 6px 12px #0006);
+        }
+
+        .mars-logo svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        h1 {
+            margin: 8px 0;
+            color: var(--accent-light);
+        }
+
+        header p {
+            color: var(--muted);
+            margin: 8px 0 18px;
+        }
+
+        .language-switch {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button, select, input {
+            font: inherit;
+        }
+
+        button {
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 10px 15px;
+            background: var(--panel-light);
+            color: var(--text);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        button:hover {
+            background: #65404a;
+        }
+
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--accent-light);
+            outline-offset: 3px;
+        }
+
+        button.active,
+        button.primary {
+            background: #a94f39;
+            border-color: var(--accent);
+        }
+
+        main {
+            width: min(1100px, 94%);
+            margin: 0 auto 40px;
+        }
+
+        .panel {
+            background: #251d29ee;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px #0002;
+        }
+
+        h2 {
+            color: var(--accent-light);
+            margin-top: 0;
+        }
+
+        .description {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .field {
+            display: block;
+            margin: 16px 0;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #17131b;
+            color: var(--text);
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(min(100%, 220px), 1fr)
+            );
+            gap: 13px;
+            margin-top: 18px;
+        }
+
+        .module-option {
+            text-align: left;
+            width: 100%;
+            min-height: 100%;
+            padding: 15px;
+            background: var(--panel-light);
+        }
+
+        .module-option.selected {
+            border: 2px solid var(--accent);
+            background: #51313a;
+        }
+
+        .module-option .module-name {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--accent-light);
+        }
+
+        .module-option .module-short {
+            display: block;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: var(--muted);
+        }
+
+        .module-option .selection-state {
+            display: block;
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+
+        .results {
+            display: grid;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .result-item {
+            padding: 15px;
+            border-radius: 10px;
+            background: var(--panel-light);
+            border-left: 4px solid var(--accent);
+        }
+
+        .result-item h3 {
+            margin: 0 0 9px;
+            color: var(--accent-light);
+        }
+
+        .result-item p {
+            margin: 7px 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .result-item strong {
+            color: var(--text);
+        }
+
+        .empty-state {
+            color: var(--muted);
+            padding: 12px 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 500px) {
+            .panel {
+                padding: 16px;
+            }
+
+            .mars-logo {
+                width: 145px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <header>
-    <div class="language-switch" role="group" aria-label="Language selection">
-      <button type="button" class="language-button active" data-language="tr" aria-pressed="true">🇹🇷 Türkçe</button>
-      <button type="button" class="language-button" data-language="en" aria-pressed="false">🇬🇧 English</button>
-    </div>
-    <p data-i18n="program">MARS KEŞİF PROGRAMI</p>
-    <h1 data-i18n="title">Mars Üssü Planlayıcısı</h1>
-    <p data-i18n="subtitle">Dört kişilik ekibin yaşam alanını ve kaynaklarını planla.</p>
-  </header>
+    <header>
+        <div class="mars-logo"
+             role="img"
+             aria-label="Mars gezegeni ve üzerindeki baklava logosu">
 
-<div class="mars-logo" role="img" aria-label="Mars with a golden baklava on top">
-  <svg
-    viewBox="0 0 180 155"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-  >
-    <defs>
-      <radialGradient id="marsColor" cx="30%" cy="25%" r="80%">
-        <stop offset="0%" stop-color="#ffad80"/>
-        <stop offset="100%" stop-color="#a92f25"/>
-      </radialGradient>
+            <svg viewBox="0 0 180 155"
+                 xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true">
 
-      <linearGradient id="baklavaColor" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#fff0a6"/>
-        <stop offset="50%" stop-color="#edbd51"/>
-        <stop offset="100%" stop-color="#bd7924"/>
-      </linearGradient>
-    </defs>
+                <defs>
+                    <radialGradient id="marsColor"
+                                    cx="30%" cy="25%" r="80%">
+                        <stop offset="0%" stop-color="#ffad80"/>
+                        <stop offset="100%" stop-color="#a92f25"/>
+                    </radialGradient>
 
-    <!-- Mars gezegeni -->
-    <circle
-      cx="90" cy="91" r="49"
-      fill="url(#marsColor)"
-      stroke="#ffb28c"
-      stroke-width="2"
-    />
+                    <linearGradient id="baklavaColor"
+                                    x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#fff0a6"/>
+                        <stop offset="50%" stop-color="#edbd51"/>
+                        <stop offset="100%" stop-color="#bd7924"/>
+                    </linearGradient>
+                </defs>
 
-    <!-- Mars yüzeyindeki detaylar -->
-    <path
-      d="M53 77 Q67 60 83 76 T111 70 L127 81"
-      fill="none"
-      stroke="#79291f"
-      stroke-width="7"
-      stroke-linecap="round"
-      opacity="0.7"
-    />
+                <!-- Mars -->
+                <circle cx="90" cy="91" r="49"
+                        fill="url(#marsColor)"
+                        stroke="#ffb28c"
+                        stroke-width="2"/>
 
-    <path
-      d="M54 104 Q70 91 83 105 T113 101"
-      fill="none"
-      stroke="#7d2a21"
-      stroke-width="5"
-      stroke-linecap="round"
-      opacity="0.65"
-    />
+                <!-- Mars yüzey detayları -->
+                <path d="M53 77 Q67 60 83 76 T111 70 L127 81"
+                      fill="none"
+                      stroke="#79291f"
+                      stroke-width="7"
+                      stroke-linecap="round"
+                      opacity="0.7"/>
 
-    <circle cx="70" cy="91" r="5" fill="#8e3025"/>
-    <circle cx="108" cy="113" r="7" fill="#8e3025"/>
-    <circle cx="111" cy="87" r="3" fill="#ffd1ad"/>
+                <path d="M54 104 Q70 91 83 105 T113 101"
+                      fill="none"
+                      stroke="#7d2a21"
+                      stroke-width="5"
+                      stroke-linecap="round"
+                      opacity="0.65"/>
 
-    <!-- Mars'ın üzerindeki baklava -->
-    <path
-      d="M90 10 L126 41 L90 70 L54 41 Z"
-      fill="url(#baklavaColor)"
-      stroke="#fff0bd"
-      stroke-width="2.5"
-      stroke-linejoin="round"
-    />
+                <circle cx="70" cy="91" r="5" fill="#8e3025"/>
+                <circle cx="108" cy="113" r="7" fill="#8e3025"/>
+                <circle cx="111" cy="87" r="3" fill="#ffd1ad"/>
 
-    <!-- Baklavanın dilim ve katman çizgileri -->
-    <path
-      d="M90 13 L90 67
-         M57 41 L123 41
-         M68 29 L112 53
-         M112 29 L68 53"
-      fill="none"
-      stroke="#a66b20"
-      stroke-width="2"
-      stroke-linecap="round"
-    />
+                <!-- Mars'ın üzerindeki altın baklava -->
+                <path d="M90 10 L126 41 L90 70 L54 41 Z"
+                      fill="url(#baklavaColor)"
+                      stroke="#fff0bd"
+                      stroke-width="2.5"
+                      stroke-linejoin="round"/>
 
-    <!-- Parlaklık detayları -->
-    <path
-      d="M90 10 L90 5 M54 41 L48 41 M126 41 L132 41"
-      stroke="#fff0bd"
-      stroke-width="2"
-      stroke-linecap="round"
-    />
+                <!-- Baklava dilimleri -->
+                <path d="M90 13 L90 67
+                         M57 41 L123 41
+                         M68 29 L112 53
+                         M112 29 L68 53"
+                      fill="none"
+                      stroke="#a66b20"
+                      stroke-width="2"
+                      stroke-linecap="round"/>
 
-    <!-- Gezegenin gölgesi -->
-    <ellipse
-      cx="90" cy="145" rx="35" ry="4"
-      fill="#000000"
-      opacity="0.18"
-    />
-  </svg>
-</div>
+                <!-- Işıltılar -->
+                <path d="M90 10 L90 5
+                         M54 41 L48 41
+                         M126 41 L132 41"
+                      stroke="#fff0bd"
+                      stroke-width="2"
+                      stroke-linecap="round"/>
 
-  <main>
-    <section aria-labelledby="mission-title">
-      <h2 id="mission-title" data-i18n="missionSummary">Görev Özeti</h2>
-      <p data-i18n="missionDescription">Görev: Mars yüzeyinde sürdürülebilir bir üs tasarlamak.</p>
-      <p data-i18n="crewDescription">Ekip büyüklüğü: Bu değeri aşağıdaki alandan değiştirebilirsin.</p>
-      <p><span data-i18n="statusLabel">Durum:</span> <strong id="status" data-i18n="statusValue">Ön planlama</strong></p>
-    </section>
+                <!-- Gölge -->
+                <ellipse cx="90" cy="145" rx="35" ry="4"
+                         fill="#000000" opacity="0.18"/>
+            </svg>
+        </div>
 
-    <section aria-labelledby="crew-title">
-      <h2 id="crew-title" data-i18n="crewHeading">Mürettebat ve Görev Süresi</h2>
-      <div class="form-field">
-        <label for="crew-size" data-i18n="crewLabel">Mürettebat sayısı (1–12)</label>
-        <input id="crew-size" name="crew-size" type="number" min="1" max="12" step="1" value="4" required>
-      </div>
-      <div class="form-field">
-        <label for="mission-days" data-i18n="daysLabel">Görev süresi (gün, 1–3650)</label>
-        <input id="mission-days" name="mission-days" type="number" min="1" max="3650" step="1" value="30" required>
-      </div>
-      <button id="calculate-button" type="button" data-i18n="calculate">Kaynakları Hesapla</button>
-      <div id="results" class="results" aria-live="polite"><p data-i18n="calculateHint">Kaynak tahminini görmek için hesaplama düğmesine bas.</p></div>
-    </section>
+        <h1 data-i18n="title">Mars Üssü Planlayıcı</h1>
+        <p data-i18n="subtitle">
+            Kızıl Gezegen'deki gelecekteki üssünü tasarla!
+        </p>
 
-    <section aria-labelledby="modules-title">
-      <h2 id="modules-title" data-i18n="modulesHeading">Üs Modülleri</h2>
-      <p data-i18n="modulesDescription">Üssünde bulunmasını istediğin bölümleri seç.</p>
-      <form id="module-form">
-        <fieldset>
-          <legend data-i18n="plannedModules">Planlanan modüller</legend>
-          <label class="module-option"><input type="checkbox" name="module" value="habitat"><span data-i18n="habitat">Yaşam alanı</span></label>
-          <label class="module-option"><input type="checkbox" name="module" value="lab"><span data-i18n="lab">Bilim laboratuvarı</span></label>
-          <label class="module-option"><input type="checkbox" name="module" value="greenhouse"><span data-i18n="greenhouse">Seracılık alanı</span></label>
-          <label class="module-option"><input type="checkbox" name="module" value="energy"><span data-i18n="energy">Enerji merkezi</span></label>
-          <label class="module-option"><input type="checkbox" name="module" value="water"><span data-i18n="water">Su arıtma bölümü</span></label>
-          <label class="module-option"><input type="checkbox" name="module" value="storage"><span data-i18n="storage">Depolama alanı</span></label>
-        </fieldset>
-        <button type="submit" data-i18n="planModules">Modülleri Planla</button>
-      </form>
-      <div id="module-summary" class="results" aria-live="polite"><p data-i18n="modulesHint">Seçtiğin modüller burada listelenecek.</p></div>
-    </section>
+        <div class="language-switch" aria-label="Language">
+            <button type="button" id="trButton" class="active">
+                🇹🇷 Türkçe
+            </button>
+            <button type="button" id="enButton">
+                🇬🇧 English
+            </button>
+        </div>
+    </header>
 
-    <section aria-labelledby="resources-title">
-      <h2 id="resources-title" data-i18n="resourcesHeading">Kaynak Planlaması</h2>
-      <p data-i18n="resourcesDescription">Bu sürüm su, yiyecek ve enerji için basitleştirilmiş tahminler yapar.</p>
-      <p data-i18n="assumptionsNote">Kullanılan kişi başı günlük katsayılar konsept amaçlıdır; gerçek bir Mars görevinin gereksinimleri olarak değerlendirilmemelidir.</p>
-    </section>
+    <main>
+        <section class="panel">
+            <h2 data-i18n="missionTitle">Görev Bilgileri</h2>
 
-    <section aria-labelledby="layout-title">
-      <h2 id="layout-title" data-i18n="layoutHeading">Üs Yerleşim Planı</h2>
-      <p data-i18n="layoutDescription">Aşağıdan bir modül seç ve ızgarada uygun bir hücreye yerleştir. Bu görünüm kavramsal bir yerleşim taslağıdır.</p>
-      <div class="form-field">
-        <label for="layout-module" data-i18n="chooseModule">Yerleştirilecek modül</label>
-        <select id="layout-module">
-          <option value="habitat" data-i18n="habitat">Yaşam alanı</option>
-          <option value="lab" data-i18n="lab">Bilim laboratuvarı</option>
-          <option value="greenhouse" data-i18n="greenhouse">Seracılık alanı</option>
-          <option value="energy" data-i18n="energy">Enerji merkezi</option>
-          <option value="water" data-i18n="water">Su arıtma bölümü</option>
-          <option value="storage" data-i18n="storage">Depolama alanı</option>
-        </select>
-      </div>
-      <div id="base-grid" class="base-grid" aria-label="Üs yerleşim ızgarası">
-        <button type="button" class="grid-cell" data-cell="0" aria-label="Hücre 1, boş">+</button><button type="button" class="grid-cell" data-cell="1" aria-label="Hücre 2, boş">+</button><button type="button" class="grid-cell" data-cell="2" aria-label="Hücre 3, boş">+</button><button type="button" class="grid-cell" data-cell="3" aria-label="Hücre 4, boş">+</button><button type="button" class="grid-cell" data-cell="4" aria-label="Hücre 5, boş">+</button><button type="button" class="grid-cell" data-cell="5" aria-label="Hücre 6, boş">+</button><button type="button" class="grid-cell" data-cell="6" aria-label="Hücre 7, boş">+</button><button type="button" class="grid-cell" data-cell="7" aria-label="Hücre 8, boş">+</button><button type="button" class="grid-cell" data-cell="8" aria-label="Hücre 9, boş">+</button>
-      </div>
-      <button type="button" id="clear-layout" data-i18n="clearLayout">Yerleşimi Temizle</button>
-      <p id="layout-status" class="results" aria-live="polite" data-i18n="layoutHint">Henüz hiçbir modül yerleştirilmedi.</p>
-    </section>
-  </main>
-  <footer>
-    <p data-i18n="footerTitle">Mars Üssü Planlayıcısı — Eğitim ve konsept tasarım projesi.</p>
-    <p data-i18n="footerNote">Sonuçlar gerçek görev verileri veya doğrulanmış mühendislik hesapları değildir.</p>
-  </footer>
+            <p class="description" data-i18n="missionDescription">
+                Üssünün temel bilgilerini belirle ve görevini planlamaya başla.
+            </p>
+
+            <div class="field">
+                <label for="baseName" data-i18n="baseNameLabel">
+                    Üs adı
+                </label>
+                <input id="baseName"
+                       type="text"
+                       maxlength="60"
+                       placeholder="Örn. Ares-1">
+            </div>
+
+            <div class="field">
+                <label for="crewSize" data-i18n="crewLabel">
+                    Mürettebat sayısı
+                </label>
+                <input id="crewSize"
+                       type="number"
+                       min="1"
+                       max="100"
+                       value="4">
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2 data-i18n="modulesTitle">Üs Modülleri</h2>
+
+            <p class="description" data-i18n="modulesDescription">
+                Üssüne eklemek istediğin modülleri seç. Seçtiğin her modülün
+                açıklaması aşağıdaki sonuçlarda gösterilecektir.
+            </p>
+
+            <div id="moduleGrid" class="module-grid"></div>
+        </section>
+
+        <section class="panel">
+            <h2 data-i18n="resultsTitle">Üs Planı Sonuçları</h2>
+
+            <p class="description" data-i18n="resultsDescription">
+                Seçtiğin modüllerin görevlerini ve planına katkılarını incele.
+            </p>
+
+            <div id="baseSummary" class="description"></div>
+            <div id="results" class="results" aria-live="polite"></div>
+
+            <div class="actions">
+                <button type="button"
+                        id="clearButton"
+                        data-i18n="clearButton">
+                    Seçimleri temizle
+                </button>
+
+                <button type="button"
+                        id="printButton"
+                        class="primary"
+                        data-i18n="printButton">
+                    Planı yazdır / PDF kaydet
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer data-i18n="footer">
+        Mars Base Planner — Mars'ta geleceği planla.
+    </footer>
+
+    <script>
+        const translations = {
+            tr: {
+                title: "Mars Üssü Planlayıcı",
+                subtitle: "Kızıl Gezegen'deki gelecekteki üssünü tasarla!",
+                missionTitle: "Görev Bilgileri",
+                missionDescription:
+                    "Üssünün temel bilgilerini belirle ve görevini planlamaya başla.",
+                baseNameLabel: "Üs adı",
+                baseNamePlaceholder: "Örn. Ares-1",
+                crewLabel: "Mürettebat sayısı",
+                modulesTitle: "Üs Modülleri",
+                modulesDescription:
+                    "Üssüne eklemek istediğin modülleri seç. Seçtiğin her modülün açıklaması aşağıdaki sonuçlarda gösterilecektir.",
+                resultsTitle: "Üs Planı Sonuçları",
+                resultsDescription:
+                    "Seçtiğin modüllerin görevlerini ve planına katkılarını incele.",
+                selected: "✓ Seçildi",
+                notSelected: "Seçmek için tıkla",
+                selectedLabel: "Seçilen modüller",
+                crewSummary: "Mürettebat",
+                people: "kişi",
+                noModules: "Henüz modül seçmedin. Yukarıdan bir veya daha fazla modül seç.",
+                clearButton: "Seçimleri temizle",
+                printButton: "Planı yazdır / PDF kaydet",
+                footer: "Mars Base Planner — Mars'ta geleceği planla.",
+                englishLabel: "English açıklama",
+                turkishLabel: "Türkçe açıklama",
+                alertCrew: "Mürettebat sayısı 1 ile 100 arasında olmalıdır.",
+                moduleCount: "Seçilen modül sayısı"
+            },
+
+            en: {
+                title: "Mars Base Planner",
+                subtitle: "Design your future base on the Red Planet!",
+                missionTitle: "Mission Details",
+                missionDescription:
+                    "Set the basic details of your base and begin planning your mission.",
+                baseNameLabel: "Base name",
+                baseNamePlaceholder: "e.g. Ares-1",
+                crewLabel: "Crew size",
+                modulesTitle: "Base Modules",
+                modulesDescription:
+                    "Select the modules you want to include. Each selected module will have its description displayed in the results below.",
+                resultsTitle: "Base Plan Results",
+                resultsDescription:
+                    "Review each selected module's purpose and contribution to your plan.",
+                selected: "✓ Selected",
+                notSelected: "Click to select",
+                selectedLabel: "Selected modules",
+                crewSummary: "Crew",
+                people: "people",
+                noModules: "You haven't selected any modules yet. Choose one or more modules above.",
+                clearButton: "Clear selections",
+                printButton: "Print plan / Save as PDF",
+                footer: "Mars Base Planner — Plan the future on Mars.",
+                englishLabel: "English description",
+                turkishLabel: "Turkish description",
+                alertCrew: "Crew size must be between 1 and 100.",
+                moduleCount: "Number of selected modules"
+            }
+        };
+
+        const modules = [
+            {
+                id: "habitat",
+                icon: "🏠",
+                name: {
+                    tr: "Yaşam Alanı",
+                    en: "Habitat"
+                },
+                short: {
+                    tr: "Mürettebatın barınması ve günlük yaşamı için.",
+                    en: "For crew accommodation and everyday living."
+                },
+                description: {
+                    tr: "Mürettebat için uyuma, dinlenme, yemek yeme ve günlük yaşam alanı sağlar. Basınçlandırma, radyasyon koruması ve sıcaklık kontrolü gibi gereksinimler tasarımda değerlendirilmelidir.",
+                    en: "Provides living space for sleeping, resting, eating, and everyday activities. The design should account for pressurization, radiation protection, and temperature control."
+                }
+            },
+            {
+                id: "laboratory",
+                icon: "🔬",
+                name: {
+                    tr: "Bilim Laboratuvarı",
+                    en: "Science Laboratory"
+                },
+                short: {
+                    tr: "Mars'ta deney ve bilimsel araştırmalar için.",
+                    en: "For experiments and scientific research on Mars."
+                },
+                description: {
+                    tr: "Mars toprağı, kaya örnekleri, atmosfer ve çevre koşulları üzerinde araştırma yapılmasını sağlar. Hassas cihazlar için kontrollü bir çalışma ortamı gerekir.",
+                    en: "Supports research on Martian soil, rock samples, the atmosphere, and environmental conditions. Sensitive instruments may require a controlled working environment."
+                }
+            },
+            {
+                id: "greenhouse",
+                icon: "🌱",
+                name: {
+                    tr: "Sera",
+                    en: "Greenhouse"
+                },
+                short: {
+                    tr: "Bitki yetiştirme ve gıda üretimi için.",
+                    en: "For growing plants and producing food."
+                },
+                description: {
+                    tr: "Bitki yetiştirmek için ışık, su, besin ve sıcaklık koşullarını düzenlemeye yardımcı olur. Uzun süreli görevlerde gıda üretimine ve bitki araştırmalarına katkı sağlayabilir.",
+                    en: "Helps regulate light, water, nutrients, and temperature for plant growth. It can support food production and plant research during long-duration missions."
+                }
+            },
+            {
+                id: "power",
+                icon: "⚡",
+                name: {
+                    tr: "Enerji Merkezi",
+                    en: "Power Center"
+                },
+                short: {
+                    tr: "Üssün elektrik ihtiyacını karşılamak için.",
+                    en: "For supplying the base with electrical power."
+                },
+                description: {
+                    tr: "Yaşam alanı, bilimsel cihazlar, iletişim ve diğer sistemler için enerji sağlar. Enerji kaynağı, depolama kapasitesi ve yedek güç planı görev gereksinimlerine göre seçilmelidir.",
+                    en: "Supplies power for habitats, scientific instruments, communications, and other systems. The power source, storage capacity, and backup plan should match mission requirements."
+                }
+            },
+            {
+                id: "water",
+                icon: "💧",
+                name: {
+                    tr: "Su Arıtma Ünitesi",
+                    en: "Water Treatment Unit"
+                },
+                short: {
+                    tr: "Suyun işlenmesi ve yeniden kullanılması için.",
+                    en: "For processing and recycling water."
+                },
+                description: {
+                    tr: "Atık sudan kullanılabilir su elde edilmesine ve su tüketiminin azaltılmasına yardımcı olur. Filtreleme, kalite kontrolü ve güvenli depolama önemli tasarım konularıdır.",
+                    en: "Helps recover usable water from wastewater and reduce overall consumption. Filtration, quality monitoring, and safe storage are important design considerations."
+                }
+            },
+            {
+                id: "storage",
+                icon: "📦",
+                name: {
+                    tr: "Depolama Alanı",
+                    en: "Storage Area"
+                },
+                short: {
+                    tr: "Malzeme, yedek parça ve erzak saklamak için.",
+                    en: "For storing supplies, spare parts, and provisions."
+                },
+                description: {
+                    tr: "Gıda, bilimsel ekipman, yedek parçalar ve diğer görev malzemelerinin düzenli biçimde saklanmasını sağlar. Depolama koşulları, malzemelerin güvenliğine ve korunmasına uygun olmalıdır.",
+                    en: "Keeps food, scientific equipment, spare parts, and other mission supplies organized. Storage conditions should protect the safety and integrity of the stored materials."
+                }
+            }
+        ];
+
+        let currentLanguage = "tr";
+        const selectedModules = new Set();
+
+        const moduleGrid = document.getElementById("moduleGrid");
+        const results = document.getElementById("results");
+        const baseSummary = document.getElementById("baseSummary");
+        const baseName = document.getElementById("baseName");
+        const crewSize = document.getElementById("crewSize");
+
+        function escapeHTML(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[char]);
+        }
+
+        function text(key) {
+            return translations[currentLanguage][key];
+        }
+
+        function renderStaticText() {
+            document.documentElement.lang = currentLanguage;
+
+            document.querySelectorAll("[data-i18n]").forEach(element => {
+                const key = element.dataset.i18n;
+                element.textContent = text(key);
+            });
+
+            baseName.placeholder = text("baseNamePlaceholder");
+
+            document.getElementById("trButton")
+                .classList.toggle("active", currentLanguage === "tr");
+
+            document.getElementById("enButton")
+                .classList.toggle("active", currentLanguage === "en");
+        }
+
+        function renderModules() {
+            moduleGrid.innerHTML = modules.map(module => {
+                const isSelected = selectedModules.has(module.id);
+
+                return `
+                    <button type="button"
+                            class="module-option ${isSelected ? "selected" : ""}"
+                            data-module-id="${module.id}"
+                            aria-pressed="${isSelected}">
+                        <span class="module-name">
+                            ${module.icon} ${escapeHTML(module.name[currentLanguage])}
+                        </span>
+                        <span class="module-short">
+                            ${escapeHTML(module.short[currentLanguage])}
+                        </span>
+                        <span class="selection-state">
+                            ${isSelected ? text("selected") : text("notSelected")}
+                        </span>
+                    </button>
+                `;
+            }).join("");
+
+            moduleGrid.querySelectorAll("[data-module-id]").forEach(button => {
+                button.addEventListener("click", () => {
+                    const id = button.dataset.moduleId;
+
+                    if (selectedModules.has(id)) {
+                        selectedModules.delete(id);
+                    } else {
+                        selectedModules.add(id);
+                    }
+
+                    renderModules();
+                    renderResults();
+                });
+            });
+        }
+
+        function renderResults() {
+            const name = baseName.value.trim() ||
+                (currentLanguage === "tr" ? "İsimsiz Mars Üssü" : "Unnamed Mars Base");
+
+            const crew = Number(crewSize.value);
+            const safeCrew = Number.isInteger(crew) && crew >= 1 && crew <= 100
+                ? crew
+                : null;
+
+            baseSummary.innerHTML = `
+                <p><strong>${escapeHTML(text("baseNameLabel"))}:</strong>
+                    ${escapeHTML(name)}</p>
+                <p><strong>${escapeHTML(text("crewSummary"))}:</strong>
+                    ${safeCrew === null ? "—" : safeCrew + " " + escapeHTML(text("people"))}</p>
+                <p><strong>${escapeHTML(text("moduleCount"))}:</strong>
+                    ${selectedModules.size}</p>
+            `;
+
+            if (selectedModules.size === 0) {
+                results.innerHTML = `
+                    <p class="empty-state">${escapeHTML(text("noModules"))}</p>
+                `;
+                return;
+            }
+
+            results.innerHTML = modules
+                .filter(module => selectedModules.has(module.id))
+                .map(module => `
+                    <article class="result-item">
+                        <h3>${module.icon} ${escapeHTML(module.name[currentLanguage])}</h3>
+                        <p>
+                            <strong>${escapeHTML(text("turkishLabel"))}:</strong>
+                            ${escapeHTML(module.description.tr)}
+                        </p>
+                        <p>
+                            <strong>${escapeHTML(text("englishLabel"))}:</strong>
+                            ${escapeHTML(module.description.en)}
+                        </p>
+                    </article>
+                `).join("");
+        }
+
+        function setLanguage(language) {
+            currentLanguage = language;
+            renderStaticText();
+            renderModules();
+            renderResults();
+        }
+
+        document.getElementById("trButton").addEventListener("click", () => {
+            setLanguage("tr");
+        });
+
+        document.getElementById("enButton").addEventListener("click", () => {
+            setLanguage("en");
+        });
+
+        document.getElementById("clearButton").addEventListener("click", () => {
+            selectedModules.clear();
+            renderModules();
+            renderResults();
+        });
+
+        document.getElementById("printButton").addEventListener("click", () => {
+            const crew = Number(crewSize.value);
+
+            if (!Number.isInteger(crew) || crew < 1 || crew > 100) {
+                alert(text("alertCrew"));
+                return;
+            }
+
+            window.print();
+        });
+
+        baseName.addEventListener("input", renderResults);
+        crewSize.addEventListener("input", renderResults);
+
+        renderStaticText();
+        renderModules();
+        renderResults();
+    </script>
 </body>
 </html>
