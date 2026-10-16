@@ -259,3 +259,28 @@ select {
     font-size: 0.85rem;
   }
 }
+
+
+/* Dil seçici */
+.language-switch {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  width: min(100% - 32px, 900px);
+  margin: 0 auto 18px;
+}
+.language-button {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+.language-button.active {
+  background: var(--mars);
+  border-color: var(--mars);
+  color: #171719;
+}
+@media (max-width: 600px) {
+  .language-switch { width: 100%; justify-content: center; }
+}

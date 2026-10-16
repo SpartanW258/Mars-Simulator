@@ -1,170 +1,94 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Dört kişilik Mars kolonisi için üs ve kaynak planlama uygulaması.">
+  <meta name="description" content="Mars kolonisi için üs ve kaynak planlama uygulaması.">
   <title>Mars Üssü Planlayıcısı</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
-
 <body>
   <header>
-    <p>MARS KEŞİF PROGRAMI</p>
-    <h1>Mars Üssü Planlayıcısı</h1>
-    <p>Dört kişilik ekibin yaşam alanını ve kaynaklarını planla.</p>
+    <div class="language-switch" role="group" aria-label="Language selection">
+      <button type="button" class="language-button active" data-language="tr" aria-pressed="true">🇹🇷 Türkçe</button>
+      <button type="button" class="language-button" data-language="en" aria-pressed="false">🇬🇧 English</button>
+    </div>
+    <p data-i18n="program">MARS KEŞİF PROGRAMI</p>
+    <h1 data-i18n="title">Mars Üssü Planlayıcısı</h1>
+    <p data-i18n="subtitle">Dört kişilik ekibin yaşam alanını ve kaynaklarını planla.</p>
   </header>
 
   <main>
     <section aria-labelledby="mission-title">
-      <h2 id="mission-title">Görev Özeti</h2>
-      <p>Görev: Mars yüzeyinde sürdürülebilir bir üs tasarlamak.</p>
-      <p>Ekip büyüklüğü: Bu değeri aşağıdaki alandan değiştirebilirsin.</p>
-      <p>Durum: <strong id="status">Ön planlama</strong></p>
+      <h2 id="mission-title" data-i18n="missionSummary">Görev Özeti</h2>
+      <p data-i18n="missionDescription">Görev: Mars yüzeyinde sürdürülebilir bir üs tasarlamak.</p>
+      <p data-i18n="crewDescription">Ekip büyüklüğü: Bu değeri aşağıdaki alandan değiştirebilirsin.</p>
+      <p><span data-i18n="statusLabel">Durum:</span> <strong id="status" data-i18n="statusValue">Ön planlama</strong></p>
     </section>
 
     <section aria-labelledby="crew-title">
-      <h2 id="crew-title">Mürettebat ve Görev Süresi</h2>
-
+      <h2 id="crew-title" data-i18n="crewHeading">Mürettebat ve Görev Süresi</h2>
       <div class="form-field">
-        <label for="crew-size">Mürettebat sayısı (1–12)</label>
-        <input
-          id="crew-size"
-          name="crew-size"
-          type="number"
-          min="1"
-          max="12"
-          step="1"
-          value="4"
-          required
-        >
+        <label for="crew-size" data-i18n="crewLabel">Mürettebat sayısı (1–12)</label>
+        <input id="crew-size" name="crew-size" type="number" min="1" max="12" step="1" value="4" required>
       </div>
-
       <div class="form-field">
-        <label for="mission-days">Görev süresi (gün, 1–3650)</label>
-        <input
-          id="mission-days"
-          name="mission-days"
-          type="number"
-          min="1"
-          max="3650"
-          step="1"
-          value="30"
-          required
-        >
+        <label for="mission-days" data-i18n="daysLabel">Görev süresi (gün, 1–3650)</label>
+        <input id="mission-days" name="mission-days" type="number" min="1" max="3650" step="1" value="30" required>
       </div>
-
-      <button id="calculate-button" type="button">
-        Kaynakları Hesapla
-      </button>
-
-      <div id="results" class="results" aria-live="polite">
-        <p>Kaynak tahminini görmek için hesaplama düğmesine bas.</p>
-      </div>
+      <button id="calculate-button" type="button" data-i18n="calculate">Kaynakları Hesapla</button>
+      <div id="results" class="results" aria-live="polite"><p data-i18n="calculateHint">Kaynak tahminini görmek için hesaplama düğmesine bas.</p></div>
     </section>
 
     <section aria-labelledby="modules-title">
-      <h2 id="modules-title">Üs Modülleri</h2>
-      <p>Üssünde bulunmasını istediğin bölümleri seç.</p>
-
+      <h2 id="modules-title" data-i18n="modulesHeading">Üs Modülleri</h2>
+      <p data-i18n="modulesDescription">Üssünde bulunmasını istediğin bölümleri seç.</p>
       <form id="module-form">
         <fieldset>
-          <legend>Planlanan modüller</legend>
-
-          <label class="module-option">
-            <input type="checkbox" name="module" value="Yaşam alanı">
-            Yaşam alanı
-          </label>
-
-          <label class="module-option">
-            <input type="checkbox" name="module" value="Bilim laboratuvarı">
-            Bilim laboratuvarı
-          </label>
-
-          <label class="module-option">
-            <input type="checkbox" name="module" value="Seracılık alanı">
-            Seracılık alanı
-          </label>
-
-          <label class="module-option">
-            <input type="checkbox" name="module" value="Enerji merkezi">
-            Enerji merkezi
-          </label>
-
-          <label class="module-option">
-            <input type="checkbox" name="module" value="Su arıtma bölümü">
-            Su arıtma bölümü
-          </label>
-
-          <label class="module-option">
-            <input type="checkbox" name="module" value="Depolama alanı">
-            Depolama alanı
-          </label>
+          <legend data-i18n="plannedModules">Planlanan modüller</legend>
+          <label class="module-option"><input type="checkbox" name="module" value="habitat"><span data-i18n="habitat">Yaşam alanı</span></label>
+          <label class="module-option"><input type="checkbox" name="module" value="lab"><span data-i18n="lab">Bilim laboratuvarı</span></label>
+          <label class="module-option"><input type="checkbox" name="module" value="greenhouse"><span data-i18n="greenhouse">Seracılık alanı</span></label>
+          <label class="module-option"><input type="checkbox" name="module" value="energy"><span data-i18n="energy">Enerji merkezi</span></label>
+          <label class="module-option"><input type="checkbox" name="module" value="water"><span data-i18n="water">Su arıtma bölümü</span></label>
+          <label class="module-option"><input type="checkbox" name="module" value="storage"><span data-i18n="storage">Depolama alanı</span></label>
         </fieldset>
-
-        <button type="submit">Modülleri Planla</button>
+        <button type="submit" data-i18n="planModules">Modülleri Planla</button>
       </form>
-
-      <div id="module-summary" class="results" aria-live="polite">
-        <p>Seçtiğin modüller burada listelenecek.</p>
-      </div>
+      <div id="module-summary" class="results" aria-live="polite"><p data-i18n="modulesHint">Seçtiğin modüller burada listelenecek.</p></div>
     </section>
 
     <section aria-labelledby="resources-title">
-      <h2 id="resources-title">Kaynak Planlaması</h2>
-      <p>Bu sürüm su, yiyecek ve enerji için basitleştirilmiş tahminler yapar.</p>
-      <p>
-        Kullanılan kişi başı günlük katsayılar konsept amaçlıdır;
-        gerçek bir Mars görevinin gereksinimleri olarak değerlendirilmemelidir.
-      </p>
+      <h2 id="resources-title" data-i18n="resourcesHeading">Kaynak Planlaması</h2>
+      <p data-i18n="resourcesDescription">Bu sürüm su, yiyecek ve enerji için basitleştirilmiş tahminler yapar.</p>
+      <p data-i18n="assumptionsNote">Kullanılan kişi başı günlük katsayılar konsept amaçlıdır; gerçek bir Mars görevinin gereksinimleri olarak değerlendirilmemelidir.</p>
+    </section>
+
+    <section aria-labelledby="layout-title">
+      <h2 id="layout-title" data-i18n="layoutHeading">Üs Yerleşim Planı</h2>
+      <p data-i18n="layoutDescription">Aşağıdan bir modül seç ve ızgarada uygun bir hücreye yerleştir. Bu görünüm kavramsal bir yerleşim taslağıdır.</p>
+      <div class="form-field">
+        <label for="layout-module" data-i18n="chooseModule">Yerleştirilecek modül</label>
+        <select id="layout-module">
+          <option value="habitat" data-i18n="habitat">Yaşam alanı</option>
+          <option value="lab" data-i18n="lab">Bilim laboratuvarı</option>
+          <option value="greenhouse" data-i18n="greenhouse">Seracılık alanı</option>
+          <option value="energy" data-i18n="energy">Enerji merkezi</option>
+          <option value="water" data-i18n="water">Su arıtma bölümü</option>
+          <option value="storage" data-i18n="storage">Depolama alanı</option>
+        </select>
+      </div>
+      <div id="base-grid" class="base-grid" aria-label="Üs yerleşim ızgarası">
+        <button type="button" class="grid-cell" data-cell="0" aria-label="Hücre 1, boş">+</button><button type="button" class="grid-cell" data-cell="1" aria-label="Hücre 2, boş">+</button><button type="button" class="grid-cell" data-cell="2" aria-label="Hücre 3, boş">+</button><button type="button" class="grid-cell" data-cell="3" aria-label="Hücre 4, boş">+</button><button type="button" class="grid-cell" data-cell="4" aria-label="Hücre 5, boş">+</button><button type="button" class="grid-cell" data-cell="5" aria-label="Hücre 6, boş">+</button><button type="button" class="grid-cell" data-cell="6" aria-label="Hücre 7, boş">+</button><button type="button" class="grid-cell" data-cell="7" aria-label="Hücre 8, boş">+</button><button type="button" class="grid-cell" data-cell="8" aria-label="Hücre 9, boş">+</button>
+      </div>
+      <button type="button" id="clear-layout" data-i18n="clearLayout">Yerleşimi Temizle</button>
+      <p id="layout-status" class="results" aria-live="polite" data-i18n="layoutHint">Henüz hiçbir modül yerleştirilmedi.</p>
     </section>
   </main>
-
   <footer>
-    <p>Mars Üssü Planlayıcısı — Eğitim ve konsept tasarım projesi.</p>
-    <p>
-      Sonuçlar gerçek görev verileri veya doğrulanmış mühendislik hesapları değildir.
-    </p>
+    <p data-i18n="footerTitle">Mars Üssü Planlayıcısı — Eğitim ve konsept tasarım projesi.</p>
+    <p data-i18n="footerNote">Sonuçlar gerçek görev verileri veya doğrulanmış mühendislik hesapları değildir.</p>
   </footer>
 </body>
 </html>
-
-
-<section aria-labelledby="layout-title">
-  <h2 id="layout-title">Üs Yerleşim Planı</h2>
-  <p>
-    Aşağıdan bir modül seç ve ızgarada uygun bir hücreye yerleştir.
-    Bu görünüm kavramsal bir yerleşim taslağıdır.
-  </p>
-
-  <div class="form-field">
-    <label for="layout-module">Yerleştirilecek modül</label>
-    <select id="layout-module">
-      <option value="Yaşam alanı">Yaşam alanı</option>
-      <option value="Bilim laboratuvarı">Bilim laboratuvarı</option>
-      <option value="Seracılık alanı">Seracılık alanı</option>
-      <option value="Enerji merkezi">Enerji merkezi</option>
-      <option value="Su arıtma bölümü">Su arıtma bölümü</option>
-      <option value="Depolama alanı">Depolama alanı</option>
-    </select>
-  </div>
-
-  <div id="base-grid" class="base-grid" aria-label="Üs yerleşim ızgarası">
-    <button type="button" class="grid-cell" data-cell="0" aria-label="Hücre 1, boş">+</button>
-    <button type="button" class="grid-cell" data-cell="1" aria-label="Hücre 2, boş">+</button>
-    <button type="button" class="grid-cell" data-cell="2" aria-label="Hücre 3, boş">+</button>
-    <button type="button" class="grid-cell" data-cell="3" aria-label="Hücre 4, boş">+</button>
-    <button type="button" class="grid-cell" data-cell="4" aria-label="Hücre 5, boş">+</button>
-    <button type="button" class="grid-cell" data-cell="5" aria-label="Hücre 6, boş">+</button>
-    <button type="button" class="grid-cell" data-cell="6" aria-label="Hücre 7, boş">+</button>
-    <button type="button" class="grid-cell" data-cell="7" aria-label="Hücre 8, boş">+</button>
-    <button type="button" class="grid-cell" data-cell="8" aria-label="Hücre 9, boş">+</button>
-  </div>
-
-  <button type="button" id="clear-layout">Yerleşimi Temizle</button>
-  <p id="layout-status" class="results" aria-live="polite">
-    Henüz hiçbir modül yerleştirilmedi.
-  </p>
-</section>
