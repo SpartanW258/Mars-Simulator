@@ -310,3 +310,19 @@ select {
   line-height: 1.55;
   color: var(--text);
 }
+
+
+/* Mars ve baklava logosu */
+.mars-logo {
+    width: 180px;
+    max-width: 42vw;
+    margin: 0 auto 16px;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25));
+}
+
+.mars-logo svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
