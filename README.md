@@ -18,6 +18,15 @@ A simple Mars base planning app built with HTML, CSS, and JavaScript, with Turki
 1. `index.html`, `style.css`, and `script.js` dosyalarını aynı klasörde tutun / Keep the three files in the same folder.
 2. `index.html` dosyasını bir web tarayıcısında açın / Open `index.html` in a web browser.
 
+## GitHub Pages ile yayımlama / Publish with GitHub Pages
+
+1. Bu klasördeki `index.html`, `style.css`, `script.js`, and `README.md` dosyalarını GitHub deposunun ana dizinine yükleyin veya mevcut dosyaların üzerine yazın.
+2. GitHub deposunda **Settings → Pages** bölümünü açın.
+3. **Deploy from a branch** seçeneğini seçin; ana dalı (çoğunlukla `main`) ve `/(root)` klasörünü seçip kaydedin.
+4. GitHub Pages sayfasının yayımlanmasını bekleyin. Değişikliklerin görünmesi birkaç dakika sürebilir.
+
+Upload `index.html`, `style.css`, `script.js`, and `README.md` from this folder to the root of your GitHub repository, replacing the previous versions. Then open **Settings → Pages**, choose **Deploy from a branch**, select your main branch and `/(root)`, and save.
+
 ## Önemli not / Important note
 
 Kaynak değerleri konsept amaçlı basit varsayımlardır: kişi başına günde 5 litre su, 1,8 kg yiyecek ve 10 kWh enerji. Bu değerler gerçek bir Mars görevi için doğrulanmış mühendislik gereksinimleri değildir.

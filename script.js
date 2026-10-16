@@ -30,6 +30,7 @@ const translations = {
     assumptionsNote:"Kullanılan kişi başı günlük katsayılar konsept amaçlıdır; gerçek bir Mars görevinin gereksinimleri olarak değerlendirilmemelidir.",
     layoutHeading:"Üs Yerleşim Planı", layoutDescription:"Aşağıdan bir modül seç ve ızgarada uygun bir hücreye yerleştir. Bu görünüm kavramsal bir yerleşim taslağıdır.",
     chooseModule:"Yerleştirilecek modül", clearLayout:"Yerleşimi Temizle", layoutHint:"Henüz hiçbir modül yerleştirilmedi.",
+    layoutNoSelectedModules:"Önce Üs Modülleri bölümünden seçim yap.", layoutSelectPrompt:"Yerleştirmek için bir modül seç.",
     footerTitle:"Mars Üssü Planlayıcısı — Eğitim ve konsept tasarım projesi.",
     footerNote:"Sonuçlar gerçek görev verileri veya doğrulanmış mühendislik hesapları değildir.",
     invalidCrew:"Mürettebat sayısı 1 ile 12 arasında bir tam sayı olmalıdır.",
@@ -65,6 +66,7 @@ const translations = {
     assumptionsNote:"Daily per-person rates are conceptual assumptions and should not be treated as requirements for a real Mars mission.",
     layoutHeading:"Base Layout", layoutDescription:"Choose a module below and place it in an available grid cell. This is a conceptual layout.",
     chooseModule:"Module to place", clearLayout:"Clear Layout", layoutHint:"No modules have been placed yet.",
+    layoutNoSelectedModules:"First select modules in the Base Modules section.", layoutSelectPrompt:"Choose a module to place.",
     footerTitle:"Mars Base Planner — An educational concept-design project.",
     footerNote:"Results are not real mission data or validated engineering calculations.",
     invalidCrew:"Crew size must be a whole number between 1 and 12.",
@@ -161,6 +163,50 @@ function renderModuleSummary() {
   });
   moduleSummary.appendChild(list);
 }
+function selectedModuleKeys() {
+  if (!moduleForm) return [];
+  return Array.from(moduleForm.querySelectorAll('input[name="module"]:checked')).map(input => input.value);
+}
+function syncLayoutModuleOptions() {
+  if (!layoutModule) return;
+  const selected = selectedModuleKeys();
+  const previous = layoutModule.value;
+  layoutModule.replaceChildren();
+  if (!selected.length) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = t("layoutNoSelectedModules");
+    layoutModule.appendChild(option);
+    layoutModule.disabled = true;
+    return;
+  }
+  const prompt = document.createElement("option");
+  prompt.value = "";
+  prompt.textContent = t("layoutSelectPrompt");
+  layoutModule.appendChild(prompt);
+  selected.forEach(key => {
+    const option = document.createElement("option");
+    option.value = key;
+    option.textContent = moduleName(key);
+    layoutModule.appendChild(option);
+  });
+  layoutModule.disabled = false;
+  layoutModule.value = selected.includes(previous) ? previous : selected[0];
+}
+function removeUnselectedPlacedModules() {
+  const allowed = new Set(selectedModuleKeys());
+  const placements = updateLayoutText.placements;
+  for (const [cellId, key] of placements.entries()) {
+    if (!allowed.has(key)) placements.delete(cellId);
+  }
+  if (layoutStatusKey === "placed" && !allowed.has(layoutStatusModule)) {
+    layoutStatusKey = placements.size ? "layoutHint" : "layoutHint";
+    layoutStatusModule = null;
+  }
+  updateLayoutText();
+  renderLayoutStatus();
+}
+
 function updateLayoutText() {
   if (!layoutGrid) return;
   const placements = updateLayoutText.placements;
@@ -204,17 +250,39 @@ function applyLanguage(lang) {
   });
   if (hasCalculated) renderResults();
   if (hasSubmittedModules) renderModuleSummary();
+  syncLayoutModuleOptions();
   updateLayoutText();
   renderLayoutStatus();
 }
 document.querySelectorAll("[data-language]").forEach(btn=>btn.addEventListener("click",()=>applyLanguage(btn.dataset.language)));
 if (calculateButton) calculateButton.addEventListener("click",renderResults);
-if (moduleForm) moduleForm.addEventListener("submit",e=>{e.preventDefault();renderModuleSummary();});
+if (moduleForm) {
+  moduleForm.addEventListener("submit", e => {
+    e.preventDefault();
+    renderModuleSummary();
+    syncLayoutModuleOptions();
+    removeUnselectedPlacedModules();
+  });
+  moduleForm.querySelectorAll('input[name="module"]').forEach(input => {
+    input.addEventListener("change", () => {
+      syncLayoutModuleOptions();
+      removeUnselectedPlacedModules();
+      if (hasSubmittedModules) renderModuleSummary();
+    });
+  });
+}
 if (layoutGrid) layoutGrid.addEventListener("click",e=>{
   const cell=e.target.closest(".grid-cell"); if(!cell) return;
   const placements=updateLayoutText.placements, id=cell.dataset.cell;
   if(placements.has(id)){layoutStatusKey="occupied"; layoutStatusModule=null; renderLayoutStatus(); return;}
-  const key=layoutModule.value; placements.set(id,key);
+  const key=layoutModule.value;
+  if (!key || !selectedModuleKeys().includes(key)) {
+    layoutStatusKey = "layoutNoSelectedModules";
+    layoutStatusModule = null;
+    renderLayoutStatus();
+    return;
+  }
+  placements.set(id,key);
   layoutStatusKey="placed"; layoutStatusModule=key;
   updateLayoutText();
   renderLayoutStatus();
