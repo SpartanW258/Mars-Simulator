@@ -18,7 +18,14 @@ const translations = {
     modulesHeading:"Üs Modülleri", modulesDescription:"Üssünde bulunmasını istediğin bölümleri seç.",
     plannedModules:"Planlanan modüller", habitat:"Yaşam alanı", lab:"Bilim laboratuvarı",
     greenhouse:"Seracılık alanı", energy:"Enerji merkezi", water:"Su arıtma bölümü",
-    storage:"Depolama alanı", planModules:"Modülleri Planla", modulesHint:"Seçtiğin modüller burada listelenecek.",
+    storage:"Depolama alanı",
+    habitatDesc:"Mürettebatın uyuması, dinlenmesi, yemek yemesi ve günlük yaşamını sürdürmesi için basınçlandırılmış yaşam alanı.",
+    labDesc:"Mars toprağı, kayaçları, atmosferi ve çevresini incelemek için deney ve analizlerin yapıldığı bölüm.",
+    greenhouseDesc:"Bitki yetiştirmek ve mürettebatın beslenmesine katkı sağlamak için kontrollü ışık, sıcaklık ve nem koşulları sunan alan.",
+    energyDesc:"Üssün elektrik ihtiyacını karşılayan güç üretimi, enerji dağıtımı ve depolama sistemlerinin bulunduğu bölüm.",
+    waterDesc:"Atık suyu işlemek, suyu arıtmak ve kullanılabilir su kaynaklarını yönetmek için tasarlanan sistem alanı.",
+    storageDesc:"Yiyecek, yedek parça, bilimsel ekipman ve diğer gerekli malzemelerin düzenli ve güvenli biçimde saklandığı alan.",
+    planModules:"Modülleri Planla", modulesHint:"Seçtiğin modüller burada listelenecek.",
     resourcesHeading:"Kaynak Planlaması", resourcesDescription:"Bu sürüm su, yiyecek ve enerji için basitleştirilmiş tahminler yapar.",
     assumptionsNote:"Kullanılan kişi başı günlük katsayılar konsept amaçlıdır; gerçek bir Mars görevinin gereksinimleri olarak değerlendirilmemelidir.",
     layoutHeading:"Üs Yerleşim Planı", layoutDescription:"Aşağıdan bir modül seç ve ızgarada uygun bir hücreye yerleştir. Bu görünüm kavramsal bir yerleşim taslağıdır.",
@@ -46,7 +53,14 @@ const translations = {
     modulesHeading:"Base Modules", modulesDescription:"Select the facilities you want at your base.",
     plannedModules:"Planned modules", habitat:"Habitat", lab:"Science laboratory",
     greenhouse:"Greenhouse", energy:"Power center", water:"Water treatment unit",
-    storage:"Storage area", planModules:"Plan Modules", modulesHint:"Your selected modules will be listed here.",
+    storage:"Storage area",
+    habitatDesc:"A pressurized living space where crew members can sleep, rest, eat, and carry out daily activities.",
+    labDesc:"A facility for experiments and analysis of Martian soil, rocks, atmosphere, and surrounding environment.",
+    greenhouseDesc:"A controlled space for growing plants, with managed lighting, temperature, and humidity to support the crew’s food supply.",
+    energyDesc:"A facility containing power generation, distribution, and storage systems that supply electricity to the base.",
+    waterDesc:"A system area designed to process wastewater, purify water, and manage usable water supplies.",
+    storageDesc:"A secure, organized area for food, spare parts, scientific equipment, and other essential supplies.",
+    planModules:"Plan Modules", modulesHint:"Your selected modules will be listed here.",
     resourcesHeading:"Resource Planning", resourcesDescription:"This version provides simplified estimates for water, food, and energy.",
     assumptionsNote:"Daily per-person rates are conceptual assumptions and should not be treated as requirements for a real Mars mission.",
     layoutHeading:"Base Layout", layoutDescription:"Choose a module below and place it in an available grid cell. This is a conceptual layout.",
@@ -133,9 +147,19 @@ function renderModuleSummary() {
   if (!selected.length) { showMessage(moduleSummary,t("selectModuleError")); return; }
   moduleSummary.replaceChildren();
   const h=document.createElement("h3"); h.textContent=t("selectedModules"); moduleSummary.appendChild(h);
-  const ul=document.createElement("ul");
-  selected.forEach(key=>{const li=document.createElement("li");li.textContent=moduleName(key);ul.appendChild(li);});
-  moduleSummary.appendChild(ul);
+  const list=document.createElement("div");
+  list.className="module-summary-list";
+  selected.forEach(key=>{
+    const card=document.createElement("article");
+    card.className="module-summary-card";
+    const title=document.createElement("h4");
+    title.textContent=moduleName(key);
+    const description=document.createElement("p");
+    description.textContent=t(key+"Desc");
+    card.append(title,description);
+    list.appendChild(card);
+  });
+  moduleSummary.appendChild(list);
 }
 function updateLayoutText() {
   if (!layoutGrid) return;
